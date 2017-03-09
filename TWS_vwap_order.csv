@@ -1,0 +1,1 @@
+contract,exchange,trade_type,quantity,order_type,max_percentage_ADV,start_time,end_time,allow_trading_past_end_time,ry tse,smart,buy,10000,vwap_algo,5%,9:30 am ET,3:45 pm ET,FALSE,TRUEaapl,smart,sell,100,vwap_algo,5%,10:00 am ET,3:30 pm ET,FALSE,TRUE
