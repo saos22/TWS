@@ -2,6 +2,8 @@ from ib.opt import Connection, message
 from ib.ext.Contract import Contract
 from ib.ext.Order import Order
 import sys
+from time import sleep
+
 def make_contract(symbol, sec_type, exch, prim_exch, curr):
 
     Contract.m_symbol = symbol
@@ -11,7 +13,10 @@ def make_contract(symbol, sec_type, exch, prim_exch, curr):
     Contract.m_currency = curr
     return Contract
 
-
+def check_order(Order):
+	return Order.m_lmtPrice
+	print Order.m_lmtPrice
+	print('hi')
 
 def make_order(action,quantity, price = None):
 
@@ -21,7 +26,7 @@ def make_order(action,quantity, price = None):
         order.m_totalQuantity = quantity
         order.m_action = action
         order.m_lmtPrice = price
-
+         
     else:
         order = Order()
         order.m_orderType = 'MKT'
@@ -30,25 +35,39 @@ def make_order(action,quantity, price = None):
 
         
     return order
+oidfile = open('oid_tracker.txt', 'r') 
+cid = oidfile.readline()
+oidfile.close()
+print(cid)
 
-
-cid = 10105
-stocks = ['MSFT', 'AAPL']
-
-#while __name__ == "__main__":
+oid = int(cid)
+stocks = ['FB']
+prices = [137.59, 120.34,150.98]
+amounts = [2,5,10]
+# while __name__ == "__main__":
 
 conn = Connection.create(port=7496, clientId=999)
 conn.connect()
 
-for stock in stocks:
-	oid = cid
-	cont = make_contract(stock, 'STK', 'SMART', 'SMART', 'USD')
-    	
-	offer = make_order('BUY', 1, 200)
+for stock,price,amount in zip(stocks,prices,amounts):
+	                
+	cont = make_contract(stock, 'STK', 'SMART', 'SMART', 'USD')	
+	offer = make_order('BUY', amount, price)
 	conn.placeOrder(oid, cont, offer)
-	cid += 1
+	check = check_order(offer)
+	oid += 1
+	print(stock + "\n")
+	print(oid)
+
 
 conn.disconnect()
+
+
+replaceoid = open('oid_tracker.txt', 'w')
+replaceoid.write("%d" % oid)
+
+replaceoid.close()
+
     #x = raw_input('enter to resend')
     
 
